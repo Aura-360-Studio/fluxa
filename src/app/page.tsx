@@ -110,7 +110,7 @@ export default function Home() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative w-full max-w-2xl bg-[#050505]/60 border border-white/10 backdrop-blur-xl rounded-[2rem] p-10 md:p-14 shadow-2xl overflow-hidden"
+          className="relative w-full max-w-xl bg-[#050505]/60 border border-white/10 backdrop-blur-xl rounded-[2rem] p-8 md:p-10 shadow-2xl overflow-hidden"
         >
           <div className="relative z-10 flex flex-col items-center">
             {/* Top Section */}
