@@ -126,25 +126,22 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
       ctx.globalAlpha = 1;
       ctx.shadowBlur = 0;
 
-      // 3. Global Signal Dust (Floating particles all over the screen)
+      // 3. Global Signal Dust (Floating colored particles all over)
       if (!reducedMotion) {
         const particleCount = 200;
         const colors = ["#8a2be2", "#4169E1", "#00f0ff", "#ffffff"];
         
         for(let p = 0; p < particleCount; p++) {
-          // Use a stable-ish seed based on index p
           const seedX = (p * 7919) % 10000 / 10000;
           const seedY = (p * 6701) % 10000 / 10000;
           const seedColor = (p * 4337) % colors.length;
           
-          // Subtle drift logic
           const driftX = Math.sin(time * 0.001 + p) * 20;
           const driftY = Math.cos(time * 0.0008 + p * 2) * 20;
           
           const x = (seedX * canvas.width + driftX);
           const y = (seedY * canvas.height + driftY);
           
-          // Shimmer effect
           const shimmer = Math.abs(Math.sin(p * 12 + time * 0.015));
           const size = shimmer * 1.5;
           
@@ -152,8 +149,37 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
             ctx.fillStyle = colors[seedColor];
             ctx.shadowBlur = 4;
             ctx.shadowColor = colors[seedColor];
-            ctx.globalAlpha = (0.1 + shimmer * 0.2) * (connectionState === 'testing_download' || connectionState === 'testing_upload' ? 1.5 : 1);
+            ctx.globalAlpha = (0.05 + shimmer * 0.1) * (connectionState === 'testing_download' || connectionState === 'testing_upload' ? 1.5 : 1);
             
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      // 4. Aura Dust (Original white particles following the wave contour)
+      if (!reducedMotion) {
+        ctx.fillStyle = "#ffffff";
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = "#00f0ff";
+        
+        for(let p = 0; p < 60; p++) {
+          const angle = (p * 137.5) * (Math.PI / 180);
+          const drift = Math.sin(p * 50 + time * 0.002) * 50;
+          const lobeShape = Math.sin(angle * 3 + Math.PI/2) * (isMobile ? 20 : 40);
+          
+          const r = baseRadius + lobeShape + drift + (Math.cos(p) * 30);
+          const currentAngle = angle + (time * 0.0005 * speedMultiplier * (p % 2 === 0 ? 1 : -1));
+          
+          const x = centerX + Math.cos(currentAngle) * r;
+          const y = centerY + Math.sin(currentAngle) * r;
+          
+          const shimmer = Math.abs(Math.sin(p * 12 + time * 0.015));
+          const size = shimmer * 1.5;
+          
+          if (size > 0.3) {
+            ctx.globalAlpha = 0.2 + shimmer * 0.3;
             ctx.beginPath();
             ctx.arc(x, y, size, 0, Math.PI * 2);
             ctx.fill();
