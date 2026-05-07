@@ -86,7 +86,8 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
         ctx.beginPath();
         
         // Draw the organic 3-lobed blob
-        for (let i = 0; i <= Math.PI * 2.1; i += 0.02) {
+        const step = 0.01;
+        for (let i = 0; i < Math.PI * 2; i += step) {
           
           // 1. Core 3-Lobe Geometry (peaks at top, bottom-left, bottom-right)
           const lobeDepth = isMobile ? 20 : 40;
@@ -97,6 +98,7 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
           const timeSpeed = time * 0.005 * speedMultiplier;
           
           // Combine low-frequency flowing and high-frequency rippling
+          // All multipliers of 'i' must be integers to ensure 2PI periodicity
           const organicNoise = 
             Math.sin(timeSpeed + i * 4) * distortionMultiplier + 
             Math.cos(timeSpeed * 1.5 + i * 2) * (distortionMultiplier * 0.6) +
