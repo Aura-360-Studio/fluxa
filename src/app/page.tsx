@@ -120,90 +120,88 @@ export default function Home() {
         </div>
       </header>
 
-      {/* 4. Metrics Layer - Perfectly aligned to fit inside the 3 Aura Lobes */}
-      <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full mt-10">
+      {/* 4. Metrics Layer - Centered Glassmorphism Card */}
+      <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full px-6 py-20">
         
-        {/* Container for the Triangular Layout */}
-        <div className="relative w-full max-w-4xl aspect-video md:aspect-[4/3] flex items-center justify-center">
-          
-          {/* Top/Center Lobe: Main Status & Downstream */}
-          <div className="absolute top-[10%] md:top-[15%] flex flex-col items-center text-center max-w-md px-6">
-            <div className="flex items-center gap-2 text-[#00f0ff] text-xs font-semibold tracking-[0.2em] mb-4">
-              <span className="w-2 h-2 rounded-full bg-[#00f0ff] animate-pulse shadow-[0_0_8px_#00f0ff]"></span>
-              LIVE
-            </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative w-full max-w-5xl bg-white/[0.03] border border-white/10 backdrop-blur-3xl rounded-[2.5rem] p-8 md:p-12 shadow-[0_0_80px_-20px_rgba(0,0,0,0.5)] overflow-hidden"
+        >
+          {/* Decorative Corner Glows */}
+          <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#8a2be2]/10 blur-[80px] pointer-events-none"></div>
+          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-[#00f0ff]/10 blur-[80px] pointer-events-none"></div>
 
-            {/* SEO Heading - Hidden from view but visible to crawlers */}
-            <h1 className="sr-only">Fluxa | Ad-Free Internet Speed Test & Health Checker</h1>
-
-            <h1 className="text-4xl md:text-5xl font-light tracking-wide mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#8a2be2] via-white to-[#00f0ff] drop-shadow-lg">
-              {getStateMessage()}
-            </h1>
+          {/* Container for the Triangular Layout within the card */}
+          <div className="relative w-full flex flex-col md:flex-row items-center justify-between gap-12 md:gap-0">
             
-            <p className="text-sm md:text-base text-white/60 font-light leading-relaxed mb-8 md:mb-12 max-w-sm">
-              {interpretation}
-            </p>
-
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-white/40 font-semibold mb-2">
-                DOWNSTREAM
-              </span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-7xl md:text-8xl font-light text-white tabular-nums tracking-tight drop-shadow-lg">
-                  {metrics.download > 0 ? metrics.download : '--'}
-                </span>
-                <span className="text-lg md:text-xl text-[#00f0ff] opacity-80">Mbps</span>
+            {/* Left Lobe: Upstream */}
+            <div className="flex flex-col items-center order-2 md:order-1">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/10 flex items-center justify-center mb-4 relative bg-white/5">
+                <div className="absolute inset-0 rounded-full bg-[#8a2be2]/10 blur-md"></div>
+                <svg className="w-6 h-6 text-[#8a2be2] z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+                </svg>
               </div>
-              {/* Intense glowing blue accent line */}
-              <div className="w-16 h-[3px] rounded-full bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent mt-4 opacity-80 shadow-[0_0_15px_#00f0ff]"></div>
-            </div>
-          </div>
-
-          {/* Bottom Left Lobe: Upstream */}
-          <div className="absolute bottom-[10%] md:bottom-[15%] left-[10%] md:left-[15%] flex flex-col items-center">
-            {/* Icon Circle */}
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/10 flex items-center justify-center mb-4 relative">
-              <div className="absolute inset-0 rounded-full bg-[#8a2be2]/10 blur-md"></div>
-              <svg className="w-6 h-6 text-[#8a2be2] z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
-              </svg>
-              {/* Tiny trailing dot */}
-              <div className="absolute -bottom-1 -right-1 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_white]"></div>
-            </div>
-            
-            <span className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-[#8a2be2] font-semibold mb-1">
-              UPSTREAM
-            </span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl md:text-4xl font-light text-white tabular-nums drop-shadow-md">
-                {metrics.upload > 0 ? metrics.upload : '--'}
+              <span className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-[#8a2be2] font-semibold mb-1">
+                UPSTREAM
               </span>
-              <span className="text-xs md:text-sm text-[#00f0ff] opacity-80">Mbps</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl md:text-4xl font-light text-white tabular-nums drop-shadow-md">
+                  {metrics.upload > 0 ? metrics.upload : '--'}
+                </span>
+                <span className="text-xs md:text-sm text-[#00f0ff] opacity-80">Mbps</span>
+              </div>
             </div>
-          </div>
 
-          {/* Bottom Right Lobe: Latency */}
-          <div className="absolute bottom-[10%] md:bottom-[15%] right-[10%] md:right-[15%] flex flex-col items-center">
-            {/* Icon Circle */}
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/10 flex items-center justify-center mb-4 relative">
-              <div className="absolute inset-0 rounded-full bg-[#00f0ff]/10 blur-md"></div>
-              <Activity className="w-6 h-6 text-[#00f0ff] z-10" strokeWidth={1.5} />
-              {/* Tiny trailing dot */}
-              <div className="absolute -bottom-1 -right-1 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_white]"></div>
+            {/* Center Lobe: Main Status & Downstream */}
+            <div className="flex flex-col items-center text-center max-w-md px-6 order-1 md:order-2">
+              <div className="flex items-center gap-2 text-[#00f0ff] text-xs font-semibold tracking-[0.2em] mb-4">
+                <span className="w-2 h-2 rounded-full bg-[#00f0ff] animate-pulse shadow-[0_0_8px_#00f0ff]"></span>
+                LIVE
+              </div>
+
+              <h1 className="text-4xl md:text-5xl font-light tracking-wide mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#8a2be2] via-white to-[#00f0ff] drop-shadow-lg">
+                {getStateMessage()}
+              </h1>
+              
+              <p className="text-sm md:text-base text-white/60 font-light leading-relaxed mb-8 md:mb-10 max-w-sm">
+                {interpretation}
+              </p>
+
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-white/40 font-semibold mb-2">
+                  DOWNSTREAM
+                </span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-7xl md:text-8xl font-light text-white tabular-nums tracking-tight drop-shadow-lg">
+                    {metrics.download > 0 ? metrics.download : '--'}
+                  </span>
+                  <span className="text-lg md:text-xl text-[#00f0ff] opacity-80">Mbps</span>
+                </div>
+                <div className="w-16 h-[3px] rounded-full bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent mt-4 opacity-80 shadow-[0_0_15px_#00f0ff]"></div>
+              </div>
             </div>
-            
-            <span className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-[#00f0ff] font-semibold mb-1">
-              LATENCY
-            </span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl md:text-4xl font-light text-white tabular-nums drop-shadow-md">
-                {metrics.latency > 0 ? metrics.latency : '--'}
+
+            {/* Right Lobe: Latency */}
+            <div className="flex flex-col items-center order-3 md:order-3">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/10 flex items-center justify-center mb-4 relative bg-white/5">
+                <div className="absolute inset-0 rounded-full bg-[#00f0ff]/10 blur-md"></div>
+                <Activity className="w-6 h-6 text-[#00f0ff] z-10" strokeWidth={1.5} />
+              </div>
+              <span className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-[#00f0ff] font-semibold mb-1">
+                LATENCY
               </span>
-              <span className="text-xs md:text-sm text-[#00f0ff] opacity-80">ms</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl md:text-4xl font-light text-white tabular-nums drop-shadow-md">
+                  {metrics.latency > 0 ? metrics.latency : '--'}
+                </span>
+                <span className="text-xs md:text-sm text-[#00f0ff] opacity-80">ms</span>
+              </div>
             </div>
-          </div>
 
-        </div>
+          </div>
+        </motion.div>
 
       </div>
 
