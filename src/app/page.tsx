@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Menu, MapPin, Activity } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, MapPin, Activity, X, Zap, ZapOff } from "lucide-react";
 import AuraCanvas from "@/canvas/AuraCanvas";
 import { useSpeedTestStore } from "@/store/useSpeedTestStore";
 import { useSettingsStore } from "@/store/useSettingsStore";
@@ -11,8 +12,26 @@ import { interpretConnection } from "@/features/speed-test/interpreter";
 export default function Home() {
   const { state, metrics, startTest } = useSpeedTestStore();
   const { reducedMotion, toggleReducedMotion } = useSettingsStore();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [location, setLocation] = useState<string>("Sensing Location...");
 
   useEffect(() => {
+    // Fetch real-time location based on IP
+    const fetchLocation = async () => {
+      try {
+        const response = await fetch('http://ip-api.com/json');
+        const data = await response.json();
+        if (data.status === 'success') {
+          setLocation(`${data.city}, ${data.countryCode}`);
+        } else {
+          setLocation("Global Resonance");
+        }
+      } catch (error) {
+        setLocation("Global Resonance");
+      }
+    };
+
+    fetchLocation();
     startTest();
   }, [startTest]);
 
@@ -43,18 +62,84 @@ export default function Home() {
       </div>
       
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 p-0 flex items-center justify-between z-50 w-full">
-        {/* Logo removed per request */}
-        <div /> 
+      <header className="fixed top-0 left-0 right-0 p-4 flex items-center justify-between z-50 w-full pointer-events-none">
+        <div className="flex items-center pointer-events-auto">
+          <Image 
+            src="/logo.webp" 
+            alt="Fluxa Logo" 
+            width={120} 
+            height={120}
+            style={{ width: 'auto', height: 'auto' }}
+            className="object-contain"
+            priority
+          />
+        </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 pointer-events-auto relative">
           <div className="hidden sm:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white/70 backdrop-blur-md">
             <MapPin size={16} />
-            <span>Bengaluru, IN</span>
+            <span>{location}</span>
           </div>
-          <button onClick={toggleReducedMotion} className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 rounded-full text-white hover:bg-white/10 transition-colors backdrop-blur-md">
-            <Menu size={20} />
-          </button>
+          
+          <div className="relative">
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)} 
+              className={`w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 rounded-full text-white transition-all backdrop-blur-md z-50 relative ${isMenuOpen ? 'bg-white/10 border-white/30' : 'hover:bg-white/10'}`}
+            >
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: 10, x: 0 }}
+                  animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 10, x: 0 }}
+                  className="absolute top-16 right-0 w-64 bg-[#05050a]/90 border border-white/10 rounded-2xl p-4 backdrop-blur-xl shadow-2xl z-40 overflow-hidden"
+                >
+                  {/* Subtle Background Glow */}
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-glow/10 blur-[40px] pointer-events-none"></div>
+                  
+                  <div className="relative z-10 space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-xs font-semibold tracking-widest text-white/40 uppercase">Preferences</span>
+                        <h3 className="text-sm font-medium text-white mt-1">Interface</h3>
+                      </div>
+                    </div>
+
+                    <div className="h-px bg-white/5 w-full"></div>
+
+                    {/* Animation Toggle */}
+                    <div className="flex items-center justify-between group">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-lg transition-colors ${!reducedMotion ? 'bg-cyan-glow/10 text-cyan-glow' : 'bg-white/5 text-white/40'}`}>
+                          {!reducedMotion ? <Zap size={16} /> : <ZapOff size={16} />}
+                        </div>
+                        <span className="text-sm text-white/80 group-hover:text-white transition-colors">Animations</span>
+                      </div>
+
+                      <button 
+                        onClick={toggleReducedMotion}
+                        className={`w-12 h-6 rounded-full transition-all relative flex items-center px-1 ${!reducedMotion ? 'bg-cyan-glow' : 'bg-white/10'}`}
+                      >
+                        <motion.div 
+                          animate={{ x: !reducedMotion ? 24 : 0 }}
+                          className="w-4 h-4 bg-white rounded-full shadow-sm"
+                        />
+                      </button>
+                    </div>
+
+                    <div className="pt-2">
+                      <p className="text-[10px] text-white/30 leading-relaxed">
+                        Disable animations if you prefer a static interface or want to save energy.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </header>
 
