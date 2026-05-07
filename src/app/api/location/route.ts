@@ -19,9 +19,9 @@ export async function GET(request: NextRequest) {
 
   // Fallback if not on Vercel or headers missing
   return NextResponse.json({
-    city: 'Bengaluru',
+    city: 'South India',
     country: 'IN',
-    region: 'KA',
-    node: 'Bengaluru Node'
+    region: 'TN',
+    node: 'South India Node'
   });
 }

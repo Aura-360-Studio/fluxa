@@ -13,7 +13,7 @@ export default function Home() {
   const { state, metrics, startTest } = useSpeedTestStore();
   const { reducedMotion, toggleReducedMotion } = useSettingsStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [nodeName, setNodeName] = useState("Bengaluru Node");
+  const [nodeName, setNodeName] = useState("South India Node");
 
   useEffect(() => {
     startTest();
@@ -26,7 +26,7 @@ export default function Home() {
           setNodeName(`${data.city} Node`);
         }
       })
-      .catch(() => setNodeName("Bengaluru Node"));
+      .catch(() => setNodeName("South India Node"));
   }, [startTest]);
 
   const getStateMessage = () => {
