@@ -49,8 +49,8 @@ export default function Home() {
           <Image 
             src="/logo.webp" 
             alt="Fluxa Logo" 
-            width={44} 
-            height={44}
+            width={88} 
+            height={88}
             className="object-contain"
           />
         </div>
