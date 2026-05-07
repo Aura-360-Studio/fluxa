@@ -10,7 +10,7 @@ import { useSettingsStore } from "@/store/useSettingsStore";
 import { interpretConnection } from "@/features/speed-test/interpreter";
 
 export default function Home() {
-  const { state, metrics, startTest } = useSpeedTestStore();
+  const { state, metrics, showDetails, startTest, startUploadTest } = useSpeedTestStore();
   const { reducedMotion, toggleReducedMotion } = useSettingsStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [nodeName, setNodeName] = useState("South India Node");
@@ -120,13 +120,18 @@ export default function Home() {
       {/* 4. Metrics Layer - obsidian glass Card */}
       <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full px-6 pt-12">
         <motion.div 
+          layout
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            layout: { type: "spring", stiffness: 100, damping: 30, mass: 1 },
+            opacity: { duration: 0.6 }
+          }}
           className="relative w-full max-w-[500px] bg-[#050505]/60 border border-white/10 backdrop-blur-xl rounded-[2rem] p-8 shadow-2xl overflow-hidden"
         >
           <div className="relative z-10 flex flex-col items-center">
             {/* Top Section */}
-            <div className="flex flex-col items-center text-center max-w-md mb-8">
+            <motion.div layout className="flex flex-col items-center text-center max-w-md mb-8">
               <div className="flex items-center gap-2 text-[#00f0ff] text-[10px] font-bold tracking-[0.2em] mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00f0ff]"></span>
                 LIVE
@@ -152,57 +157,30 @@ export default function Home() {
                 </div>
                 <div className="w-16 h-[2px] rounded-full bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent mt-5 opacity-30"></div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Bottom Section */}
-            <div className="relative flex items-center justify-between w-full max-w-sm mb-10">
-              {/* Upstream */}
-              <div className="flex flex-col items-center flex-1">
-                <div className="w-12 h-12 rounded-full border border-white/5 flex items-center justify-center mb-4 bg-white/[0.03]">
-                  <svg className="w-4 h-4 text-[#8a2be2]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
-                  </svg>
-                </div>
-                <span className="text-[10px] uppercase tracking-[0.25em] text-[#8a2be2] font-bold mb-2">
-                  UPSTREAM
-                </span>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl md:text-3xl font-light text-white tabular-nums">
-                    {metrics.upload > 0 ? metrics.upload : '--'}
-                  </span>
-                  <span className="text-xs text-[#00f0ff] opacity-40 font-light">Mbps</span>
-                </div>
-              </div>
-
-              {/* Vertical Divider */}
-              <div className="h-14 w-px bg-white/5"></div>
-
-              {/* Latency */}
-              <div className="flex flex-col items-center flex-1">
-                <div className="w-12 h-12 rounded-full border border-white/5 flex items-center justify-center mb-4 bg-white/[0.03]">
-                  <Activity className="w-4 h-4 text-[#00f0ff]" strokeWidth={1.5} />
-                </div>
-                <span className="text-[10px] uppercase tracking-[0.25em] text-[#00f0ff] font-bold mb-2">
-                  LATENCY
-                </span>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl md:text-3xl font-light text-white tabular-nums">
-                    {metrics.latency > 0 ? metrics.latency : '--'}
-                  </span>
-                  <span className="text-xs text-[#00f0ff] opacity-40 font-light">ms</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Restart Button */}
-            <AnimatePresence>
+            {/* Middle Section: "Show more info" and "Test Again" Buttons */}
+            <AnimatePresence mode="wait">
               {state === 'complete' && (
                 <motion.div
+                  key="action-buttons"
+                  layout
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="mb-8"
+                  transition={{ duration: 0.4 }}
+                  className="flex items-center gap-4 mb-8"
                 >
+                  {!showDetails && (
+                    <button 
+                      onClick={() => startUploadTest()}
+                      className="flex items-center gap-2.5 px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/60 hover:text-white transition-all text-[10px] font-bold tracking-[0.2em] uppercase backdrop-blur-md group"
+                    >
+                      <Activity size={14} className="group-hover:animate-pulse transition-all text-[#00f0ff]/50 group-hover:text-[#00f0ff]" />
+                      Upload & Latency
+                    </button>
+                  )}
+                  
                   <button 
                     onClick={() => startTest()}
                     className="flex items-center gap-2.5 px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all text-[10px] font-bold tracking-[0.2em] uppercase backdrop-blur-md group"
@@ -214,11 +192,65 @@ export default function Home() {
               )}
             </AnimatePresence>
 
+            {/* Bottom Section: Progressive disclosure for Upstream & Latency */}
+            <AnimatePresence>
+              {showDetails && (
+                <motion.div 
+                  layout
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ 
+                    height: { type: "spring", stiffness: 100, damping: 30 },
+                    opacity: { duration: 0.5, delay: 0.2 }
+                  }}
+                  className="relative flex items-center justify-between w-full max-w-sm mb-10 overflow-hidden"
+                >
+                  {/* Upstream */}
+                  <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center flex-1">
+                    <div className="w-12 h-12 rounded-full border border-white/5 flex items-center justify-center mb-4 bg-white/[0.03]">
+                      <svg className="w-4 h-4 text-[#8a2be2]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+                      </svg>
+                    </div>
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#8a2be2] font-bold mb-2">
+                      UPSTREAM
+                    </span>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-2xl md:text-3xl font-light text-white tabular-nums">
+                        {metrics.upload > 0 ? metrics.upload : '--'}
+                      </span>
+                      <span className="text-xs text-[#00f0ff] opacity-40 font-light">Mbps</span>
+                    </div>
+                  </motion.div>
+
+                  {/* Vertical Divider */}
+                  <div className="h-14 w-px bg-white/5"></div>
+
+                  {/* Latency */}
+                  <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center flex-1">
+                    <div className="w-12 h-12 rounded-full border border-white/5 flex items-center justify-center mb-4 bg-white/[0.03]">
+                      <Activity className="w-4 h-4 text-[#00f0ff]" strokeWidth={1.5} />
+                    </div>
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#00f0ff] font-bold mb-2">
+                      LATENCY
+                    </span>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-2xl md:text-3xl font-light text-white tabular-nums">
+                        {metrics.latency > 0 ? metrics.latency : '--'}
+                      </span>
+                      <span className="text-xs text-[#00f0ff] opacity-40 font-light">ms</span>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Integrated Footer */}
-            <div className="flex items-center gap-3 text-white/20 text-[11px] font-light">
+            <motion.div layout className="flex items-center gap-3 text-white/20 text-[11px] font-light">
               <Activity size={13} className="text-[#8a2be2]/60" />
               <span>Your connection is being visualized</span>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>
