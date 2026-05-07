@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, MapPin, Activity, X, Zap, ZapOff } from "lucide-react";
+import { Menu, MapPin, Activity, X, Zap, ZapOff, RefreshCcw } from "lucide-react";
 import AuraCanvas from "@/canvas/AuraCanvas";
 import { useSpeedTestStore } from "@/store/useSpeedTestStore";
 import { useSettingsStore } from "@/store/useSettingsStore";
@@ -180,6 +180,26 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            {/* Restart Button */}
+            <AnimatePresence>
+              {state === 'complete' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="mb-8"
+                >
+                  <button 
+                    onClick={() => startTest()}
+                    className="flex items-center gap-2.5 px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-all text-[10px] font-bold tracking-[0.2em] uppercase backdrop-blur-md group"
+                  >
+                    <RefreshCcw size={14} className="group-hover:rotate-180 transition-transform duration-500 text-[#00f0ff]" />
+                    Test Again
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Integrated Footer */}
             <div className="flex items-center gap-3 text-white/20 text-[11px] font-light">
