@@ -4,7 +4,8 @@ export const runtime = 'edge';
 
 export async function GET(request: NextRequest) {
   // Try to get location from Vercel/Cloudflare headers
-  const city = request.headers.get('x-vercel-ip-city');
+  const cityHeader = request.headers.get('x-vercel-ip-city');
+  const city = cityHeader ? decodeURIComponent(cityHeader) : null;
   const country = request.headers.get('x-vercel-ip-country');
   const region = request.headers.get('x-vercel-ip-country-region');
 
