@@ -126,7 +126,7 @@ export default function Home() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative w-full max-w-2xl bg-white/[0.01] border border-white/10 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 shadow-[0_0_80px_-20px_rgba(0,0,0,0.5)] overflow-hidden"
+          className="relative w-full max-w-2xl bg-white/[0.01] border border-white/10 backdrop-blur-md rounded-[2.5rem] p-6 md:p-8 shadow-[0_0_80px_-20px_rgba(0,0,0,0.5)] overflow-hidden"
         >
           {/* Decorative Corner Glows */}
           <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#8a2be2]/5 blur-[80px] pointer-events-none"></div>
@@ -134,7 +134,7 @@ export default function Home() {
 
           <div className="relative z-10 flex flex-col items-center">
             {/* Top Section: Status & Main Metric */}
-            <div className="flex flex-col items-center text-center max-w-md mb-10">
+            <div className="flex flex-col items-center text-center max-w-md mb-6">
               <div className="flex items-center gap-2 text-[#00f0ff] text-[10px] font-semibold tracking-[0.2em] mb-4">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00f0ff] animate-pulse shadow-[0_0_8px_#00f0ff]"></span>
                 LIVE
@@ -144,7 +144,7 @@ export default function Home() {
                 {getStateMessage()}
               </h1>
               
-              <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed mb-8">
+              <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed mb-6">
                 {interpretation}
               </p>
 
@@ -163,7 +163,7 @@ export default function Home() {
             </div>
 
             {/* Bottom Section: Upstream & Latency */}
-            <div className="grid grid-cols-2 gap-8 md:gap-20 w-full max-w-sm mb-10">
+            <div className="grid grid-cols-2 gap-8 md:gap-20 w-full max-w-sm mb-6">
               {/* Upstream */}
               <div className="flex flex-col items-center">
                 <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-3 relative bg-white/5">
@@ -202,14 +202,13 @@ export default function Home() {
             </div>
 
             {/* Integrated Footer */}
-            <div className="flex items-center gap-2.5 text-white/20 text-[10px] font-light pt-6 border-t border-white/5 w-full justify-center">
+            <div className="flex items-center gap-2.5 text-white/20 text-[10px] font-light pt-4 border-t border-white/5 w-full justify-center">
               <Activity size={12} className="text-[#8a2be2]/60" />
               <span>Your connection is being visualized</span>
             </div>
 
           </div>
         </motion.div>
-
       </div>
     </main>
   );
