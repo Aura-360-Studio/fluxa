@@ -13,49 +13,7 @@ export default function Home() {
   const { state, metrics, startTest } = useSpeedTestStore();
   const { reducedMotion, toggleReducedMotion } = useSettingsStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [location, setLocation] = useState<string>("Sensing Location...");
-
   useEffect(() => {
-    // High-accuracy location using Browser Geolocation with IP fallback
-    const fetchLocation = async () => {
-      // 1. Try Browser Geolocation first (more accurate)
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            try {
-              const { latitude, longitude } = position.coords;
-              // Reverse geocode using a free service
-              const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-              const data = await response.json();
-              const city = data.address.city || data.address.town || data.address.village || data.address.state_district;
-              const countryCode = data.address.country_code?.toUpperCase();
-              setLocation(`${city}, ${countryCode}`);
-            } catch (error) {
-              fetchIpLocation(); // Fallback if reverse geocoding fails
-            }
-          },
-          () => fetchIpLocation() // Fallback if user denies permission
-        );
-      } else {
-        fetchIpLocation();
-      }
-    };
-
-    const fetchIpLocation = async () => {
-      try {
-        const response = await fetch('http://ip-api.com/json');
-        const data = await response.json();
-        if (data.status === 'success') {
-          setLocation(`${data.city}, ${data.countryCode}`);
-        } else {
-          setLocation("Global Resonance");
-        }
-      } catch (error) {
-        setLocation("Global Resonance");
-      }
-    };
-
-    fetchLocation();
     startTest();
   }, [startTest]);
 
@@ -100,11 +58,6 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-4 pointer-events-auto relative">
-          <div className="hidden sm:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white/70 backdrop-blur-md">
-            <MapPin size={16} />
-            <span>{location}</span>
-          </div>
-          
           <div className="relative">
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
