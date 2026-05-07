@@ -43,13 +43,14 @@ export default function Home() {
       </div>
       
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 p-2 flex items-center justify-between z-50 w-full">
-        <div className="flex items-center">
+      <header className="fixed top-0 left-0 right-0 p-0 flex items-center justify-between z-50 w-full">
+        <div className="flex items-center p-0 m-0">
           <Image 
             src="/logo.png" 
             alt="Fluxa Logo" 
             width={400} 
             height={400}
+            style={{ width: 'auto', height: 'auto' }}
             className="object-contain"
             priority
           />
