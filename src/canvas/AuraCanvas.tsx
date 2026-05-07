@@ -126,32 +126,34 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
       ctx.globalAlpha = 1;
       ctx.shadowBlur = 0;
 
-      // 3. Particle Layer (Floating signal dust)
+      // 3. Global Signal Dust (Floating particles all over the screen)
       if (!reducedMotion) {
-        ctx.fillStyle = "#ffffff";
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = "#00f0ff";
+        const particleCount = 200;
+        const colors = ["#8a2be2", "#4169E1", "#00f0ff", "#ffffff"];
         
-        // Render ~60 particles for performance and calmness
-        for(let p = 0; p < 60; p++) {
-          const angle = (p * 137.5) * (Math.PI / 180);
+        for(let p = 0; p < particleCount; p++) {
+          // Use a stable-ish seed based on index p
+          const seedX = (p * 7919) % 10000 / 10000;
+          const seedY = (p * 6701) % 10000 / 10000;
+          const seedColor = (p * 4337) % colors.length;
           
-          // Particles drift slowly outward/inward based on time
-          const drift = Math.sin(p * 50 + time * 0.002) * 50;
-          // Align particles roughly with the base lobes
-          const lobeShape = Math.sin(angle * 3 + Math.PI/2) * (isMobile ? 20 : 40);
+          // Subtle drift logic
+          const driftX = Math.sin(time * 0.001 + p) * 20;
+          const driftY = Math.cos(time * 0.0008 + p * 2) * 20;
           
-          const r = baseRadius + lobeShape + drift + (Math.cos(p) * 30);
-          const currentAngle = angle + (time * 0.0005 * speedMultiplier * (p % 2 === 0 ? 1 : -1));
-          
-          const x = centerX + Math.cos(currentAngle) * r;
-          const y = centerY + Math.sin(currentAngle) * r;
+          const x = (seedX * canvas.width + driftX);
+          const y = (seedY * canvas.height + driftY);
           
           // Shimmer effect
-          const size = Math.abs(Math.sin(p * 12 + time * 0.015)) * 1.5;
+          const shimmer = Math.abs(Math.sin(p * 12 + time * 0.015));
+          const size = shimmer * 1.5;
           
           if (size > 0.3) {
-            ctx.globalAlpha = 0.3 + size * 0.2; // Max alpha ~0.6
+            ctx.fillStyle = colors[seedColor];
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = colors[seedColor];
+            ctx.globalAlpha = (0.1 + shimmer * 0.2) * (connectionState === 'testing_download' || connectionState === 'testing_upload' ? 1.5 : 1);
+            
             ctx.beginPath();
             ctx.arc(x, y, size, 0, Math.PI * 2);
             ctx.fill();
