@@ -44,17 +44,8 @@ export default function Home() {
       
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 p-0 flex items-center justify-between z-50 w-full">
-        <div className="flex items-center p-0 m-0">
-          <Image 
-            src="/logo.png" 
-            alt="Fluxa Logo" 
-            width={400} 
-            height={400}
-            style={{ width: 'auto', height: 'auto' }}
-            className="object-contain"
-            priority
-          />
-        </div>
+        {/* Logo removed per request */}
+        <div /> 
 
         <div className="flex items-center gap-4">
           <div className="hidden sm:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white/70 backdrop-blur-md">
