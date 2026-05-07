@@ -43,7 +43,7 @@ export default function Home() {
       </div>
       
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 p-6 md:p-8 flex items-center justify-between z-50 w-full max-w-7xl mx-auto">
+      <header className="absolute top-0 left-0 right-0 p-2 flex items-center justify-between z-50 w-full">
         <div className="flex items-center">
           <Image 
             src="/logo.png" 
