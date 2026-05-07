@@ -76,10 +76,10 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
 
       // Multi-layer glowing membrane (Thick & nebulous)
       const layers = [
-        { blur: 120, width: 40, alpha: 0.1 }, // Massive atmospheric diffusion
-        { blur: 60, width: 25, alpha: 0.3 },  // Broad soft aura
-        { blur: 25, width: 10, alpha: 0.6 },  // Thick core energy
-        { blur: 8, width: 3, alpha: 0.9 },    // Sharp inner plasma edge
+        { blur: 120, width: 80, alpha: 0.1 }, // Massive atmospheric diffusion
+        { blur: 60, width: 50, alpha: 0.3 },  // Broad soft aura
+        { blur: 25, width: 20, alpha: 0.6 },  // Thick core energy
+        { blur: 8, width: 6, alpha: 0.9 },    // Sharp inner plasma edge
       ];
 
       layers.forEach((layerConfig, layerIndex) => {
