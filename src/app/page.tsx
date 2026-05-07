@@ -56,16 +56,16 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-4 pointer-events-auto relative">
-          <div className="hidden md:flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 text-sm text-white/80 backdrop-blur-md">
+          <div className="hidden md:flex items-center gap-3 bg-[#050505]/60 border border-white/10 rounded-full px-5 py-2.5 text-sm text-white/80 backdrop-blur-xl shadow-lg">
             <MapPin size={16} className="text-white/40" />
             <span>Bengaluru, IN</span>
-            <span className="w-2 h-2 rounded-full bg-[#00f0ff] shadow-[0_0_8px_#00f0ff]"></span>
+            <span className="w-2 h-2 rounded-full bg-[#00f0ff] shadow-[0_0_10px_#00f0ff] animate-pulse"></span>
           </div>
           
           <div className="relative">
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
-              className={`w-11 h-11 flex items-center justify-center bg-white/5 border border-white/10 rounded-full text-white transition-all backdrop-blur-md z-50 relative ${isMenuOpen ? 'bg-white/10 border-white/30' : 'hover:bg-white/10'}`}
+              className={`w-11 h-11 flex items-center justify-center bg-[#050505]/60 border border-white/10 rounded-full text-white transition-all backdrop-blur-xl z-50 relative shadow-lg ${isMenuOpen ? 'bg-white/10 border-white/30' : 'hover:bg-white/10'}`}
             >
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
