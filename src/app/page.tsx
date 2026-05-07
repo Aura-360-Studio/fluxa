@@ -63,6 +63,7 @@ export default function Home() {
             alt="Fluxa Logo" 
             width={88} 
             height={88}
+            style={{ height: 'auto' }}
             className="object-contain"
             priority={true}
           />
