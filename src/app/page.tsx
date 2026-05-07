@@ -13,8 +13,20 @@ export default function Home() {
   const { state, metrics, startTest } = useSpeedTestStore();
   const { reducedMotion, toggleReducedMotion } = useSettingsStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [nodeName, setNodeName] = useState("Bengaluru Node");
+
   useEffect(() => {
     startTest();
+    
+    // Fetch nearest network node
+    fetch('/api/location')
+      .then(res => res.json())
+      .then(data => {
+        if (data.city) {
+          setNodeName(`${data.city} Node`);
+        }
+      })
+      .catch(() => setNodeName("Bengaluru Node"));
   }, [startTest]);
 
   const getStateMessage = () => {
@@ -56,10 +68,10 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-4 pointer-events-auto relative">
-          <div className="hidden md:flex items-center gap-3 bg-[#050505]/60 border border-white/10 rounded-full px-5 py-2.5 text-sm text-white/80 backdrop-blur-xl shadow-lg">
-            <MapPin size={16} className="text-white/40" />
-            <span>Bengaluru, IN</span>
-            <span className="w-2 h-2 rounded-full bg-[#00f0ff] shadow-[0_0_10px_#00f0ff] animate-pulse"></span>
+          <div className="hidden md:flex items-center gap-3 bg-[#050505]/60 border border-white/10 rounded-full px-5 py-2.5 text-xs text-white/60 backdrop-blur-xl shadow-lg">
+            <MapPin size={14} className="text-[#00f0ff] opacity-80" />
+            <span className="font-light tracking-wide">Connected via <span className="text-white/90 font-medium">{nodeName}</span></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00f0ff] shadow-[0_0_8px_#00f0ff] animate-pulse"></span>
           </div>
           
           <div className="relative">
