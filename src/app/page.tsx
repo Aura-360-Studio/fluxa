@@ -49,11 +49,10 @@ export default function Home() {
           <Image 
             src="/logo.webp" 
             alt="Fluxa Logo" 
-            width={40} 
-            height={40}
+            width={44} 
+            height={44}
             className="object-contain"
           />
-          <span className="text-2xl font-semibold tracking-tight text-white">Fluxa</span>
         </div>
 
         <div className="flex items-center gap-4 pointer-events-auto relative">
