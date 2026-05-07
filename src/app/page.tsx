@@ -106,85 +106,84 @@ export default function Home() {
 
       {/* 4. Metrics Layer - obsidian glass Card */}
       <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full px-6 pt-12">
-        
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative w-full max-w-xl bg-[#050505]/60 border border-white/10 backdrop-blur-xl rounded-[2rem] p-8 md:p-10 shadow-2xl overflow-hidden"
+          className="relative w-full max-w-[500px] bg-[#050505]/60 border border-white/10 backdrop-blur-xl rounded-[2rem] p-8 shadow-2xl overflow-hidden"
         >
           <div className="relative z-10 flex flex-col items-center">
             {/* Top Section */}
-            <div className="flex flex-col items-center text-center max-w-md mb-12">
-              <div className="flex items-center gap-2 text-[#00f0ff] text-[10px] font-semibold tracking-[0.2em] mb-6">
+            <div className="flex flex-col items-center text-center max-w-md mb-8">
+              <div className="flex items-center gap-2 text-[#00f0ff] text-[10px] font-bold tracking-[0.2em] mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00f0ff]"></span>
                 LIVE
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-light tracking-wide mb-4 text-white">
+              <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4 text-white">
                 {getStateMessage()}
               </h1>
               
-              <p className="text-sm text-white/40 font-light leading-relaxed mb-10 max-w-xs">
+              <p className="text-sm text-white/40 font-light leading-relaxed mb-10 max-w-[320px]">
                 {interpretation}
               </p>
 
               <div className="flex flex-col items-center">
-                <span className="text-[10px] uppercase tracking-[0.25em] text-white/20 font-semibold mb-3">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-white/20 font-bold mb-4">
                   DOWNSTREAM
                 </span>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-7xl md:text-8xl font-light text-white tabular-nums tracking-tight">
+                  <span className="text-7xl md:text-8xl font-extralight text-white tabular-nums tracking-tighter">
                     {metrics.download > 0 ? metrics.download : '--'}
                   </span>
-                  <span className="text-xl text-[#00f0ff] opacity-80">Mbps</span>
+                  <span className="text-xl md:text-2xl text-[#00f0ff] font-light">Mbps</span>
                 </div>
-                <div className="w-16 h-[2px] rounded-full bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent mt-4 opacity-40"></div>
+                <div className="w-16 h-[2px] rounded-full bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent mt-5 opacity-30"></div>
               </div>
             </div>
 
             {/* Bottom Section */}
-            <div className="relative flex items-center justify-between w-full max-w-md mb-10">
+            <div className="relative flex items-center justify-between w-full max-w-sm mb-10">
               {/* Upstream */}
               <div className="flex flex-col items-center flex-1">
-                <div className="w-14 h-14 rounded-full border border-white/5 flex items-center justify-center mb-4 bg-white/[0.03]">
-                  <svg className="w-5 h-5 text-[#8a2be2]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <div className="w-12 h-12 rounded-full border border-white/5 flex items-center justify-center mb-4 bg-white/[0.03]">
+                  <svg className="w-4 h-4 text-[#8a2be2]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
                   </svg>
                 </div>
-                <span className="text-[10px] uppercase tracking-[0.2em] text-[#8a2be2] font-semibold mb-2">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-[#8a2be2] font-bold mb-2">
                   UPSTREAM
                 </span>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-3xl font-light text-white tabular-nums">
+                  <span className="text-2xl md:text-3xl font-light text-white tabular-nums">
                     {metrics.upload > 0 ? metrics.upload : '--'}
                   </span>
-                  <span className="text-[11px] text-[#00f0ff] opacity-50">Mbps</span>
+                  <span className="text-xs text-[#00f0ff] opacity-40 font-light">Mbps</span>
                 </div>
               </div>
 
               {/* Vertical Divider */}
-              <div className="h-16 w-px bg-white/5"></div>
+              <div className="h-14 w-px bg-white/5"></div>
 
               {/* Latency */}
               <div className="flex flex-col items-center flex-1">
-                <div className="w-14 h-14 rounded-full border border-white/5 flex items-center justify-center mb-4 bg-white/[0.03]">
-                  <Activity className="w-5 h-5 text-[#00f0ff]" strokeWidth={1.5} />
+                <div className="w-12 h-12 rounded-full border border-white/5 flex items-center justify-center mb-4 bg-white/[0.03]">
+                  <Activity className="w-4 h-4 text-[#00f0ff]" strokeWidth={1.5} />
                 </div>
-                <span className="text-[10px] uppercase tracking-[0.2em] text-[#00f0ff] font-semibold mb-2">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-[#00f0ff] font-bold mb-2">
                   LATENCY
                 </span>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-3xl font-light text-white tabular-nums">
+                  <span className="text-2xl md:text-3xl font-light text-white tabular-nums">
                     {metrics.latency > 0 ? metrics.latency : '--'}
                   </span>
-                  <span className="text-[11px] text-[#00f0ff] opacity-50">ms</span>
+                  <span className="text-xs text-[#00f0ff] opacity-40 font-light">ms</span>
                 </div>
               </div>
             </div>
 
             {/* Integrated Footer */}
-            <div className="flex items-center gap-3 text-white/30 text-[11px] font-light">
-              <Activity size={14} className="text-[#8a2be2]/80" />
+            <div className="flex items-center gap-3 text-white/20 text-[11px] font-light">
+              <Activity size={13} className="text-[#8a2be2]/60" />
               <span>Your connection is being visualized</span>
             </div>
           </div>
@@ -192,11 +191,7 @@ export default function Home() {
       </div>
 
       {/* Screen Footer */}
-      <div className="fixed bottom-8 left-0 right-0 px-10 flex items-center justify-between z-20 pointer-events-none">
-        <div className="flex items-center gap-2 text-white/20 text-[11px] pointer-events-auto">
-          <Activity size={14} className="opacity-50" />
-          <span>Tip: Stream HD videos or join video calls with confidence.</span>
-        </div>
+      <div className="fixed bottom-8 left-0 right-0 px-10 flex items-center justify-end z-20 pointer-events-none">
         <div className="text-white/10 text-[11px] tracking-widest pointer-events-auto">
           TEST ID: FLX-93821
         </div>
