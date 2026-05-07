@@ -44,16 +44,15 @@ export default function Home() {
       
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 p-6 md:p-8 flex items-center justify-between z-50 w-full max-w-7xl mx-auto">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center">
           <Image 
             src="/logo.png" 
             alt="Fluxa Logo" 
-            width={40} 
-            height={40}
+            width={400} 
+            height={400}
             className="object-contain"
             priority
           />
-          <span className="text-white text-2xl font-light tracking-wide">Fluxa</span>
         </div>
 
         <div className="flex items-center gap-4">
