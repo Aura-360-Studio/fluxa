@@ -16,8 +16,32 @@ export default function Home() {
   const [location, setLocation] = useState<string>("Sensing Location...");
 
   useEffect(() => {
-    // Fetch real-time location based on IP
+    // High-accuracy location using Browser Geolocation with IP fallback
     const fetchLocation = async () => {
+      // 1. Try Browser Geolocation first (more accurate)
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              const { latitude, longitude } = position.coords;
+              // Reverse geocode using a free service
+              const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+              const data = await response.json();
+              const city = data.address.city || data.address.town || data.address.village || data.address.state_district;
+              const countryCode = data.address.country_code?.toUpperCase();
+              setLocation(`${city}, ${countryCode}`);
+            } catch (error) {
+              fetchIpLocation(); // Fallback if reverse geocoding fails
+            }
+          },
+          () => fetchIpLocation() // Fallback if user denies permission
+        );
+      } else {
+        fetchIpLocation();
+      }
+    };
+
+    const fetchIpLocation = async () => {
       try {
         const response = await fetch('http://ip-api.com/json');
         const data = await response.json();
