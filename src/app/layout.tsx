@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -128,13 +129,26 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} antialiased dark`}>
       <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-HPT8MW3GK7"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-HPT8MW3GK7');
+          `}
+        </Script>
         <script defer data-domain="fluxa.aura360studio.com" src="https://plausible.io/js/script.js"></script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-cosmic-black text-white font-sans overflow-hidden">
+      <body className="min-h-screen bg-cosmic-black text-white font-sans overflow-hidden" suppressHydrationWarning>
         {children}
       </body>
     </html>

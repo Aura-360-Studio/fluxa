@@ -15,30 +15,37 @@ export function interpretConnection(metrics: SpeedMetrics): { heading: string, d
   }
 
   // Base classification
-  if (download >= 100 && upload >= 20 && latency < 40) {
+  if (download >= 100) {
     return {
-      heading: "Pristine Flow",
-      description: "Crystal clear 4K streaming and effortless large uploads. Instantaneous responsiveness."
+      heading: "Excellent Resonance",
+      description: "Pristine energy flow. Crystal clear 4K/8K streaming and near-instantaneous responsiveness."
     };
   }
   
-  if (download >= 25 && latency < 80) {
+  if (download >= 50) {
     return {
-      heading: "Strong Resonance",
+      heading: "Strong Flow",
+      description: "Strong resonance detected. 4K streaming and simultaneous multi-device usage are effortless."
+    };
+  }
+
+  if (download >= 11) {
+    return {
+      heading: "Fluid Connection",
       description: "HD video calls will be smooth. Streaming and daily tasks are fully supported."
     };
   }
 
-  if (download >= 5) {
+  if (download >= 1) {
     return {
-      heading: "Stable Connection",
+      heading: "Stable Field",
       description: "Basic web browsing and standard video calls will work fine. Large downloads may take time."
     };
   }
 
   if (download > 0) {
     return {
-      heading: "Weak Field",
+      heading: "Weak Resonance",
       description: "Connection is struggling. Video may buffer and high-bandwidth tasks will be difficult."
     };
   }
@@ -46,5 +53,12 @@ export function interpretConnection(metrics: SpeedMetrics): { heading: string, d
   return {
     heading: "Flow Optimized",
     description: "Connection analysis complete."
+  };
+}
+
+export function getOfflineMessage(): { heading: string, description: string } {
+  return {
+    heading: "Field Disconnected",
+    description: "The energy flow has been interrupted. Please check your network connection and try again."
   };
 }

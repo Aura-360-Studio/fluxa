@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { engine, SpeedTestResult } from '@/features/speed-test/engine';
 
-export type ConnectionState = 'idle' | 'connecting' | 'testing_ping' | 'testing_download' | 'testing_upload' | 'complete' | 'error';
+export type ConnectionState = 'idle' | 'connecting' | 'testing_ping' | 'testing_download' | 'testing_upload' | 'complete' | 'error' | 'offline';
 
 interface SpeedMetrics {
   download: number;
@@ -54,7 +54,11 @@ export const useSpeedTestStore = create<SpeedTestStore>((set, get) => ({
       set({ state: 'complete' }); 
     } catch (e) {
       console.error("Speed test failed:", e);
-      set({ state: 'error' });
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        set({ state: 'offline' });
+      } else {
+        set({ state: 'error' });
+      }
     }
   },
 
@@ -82,7 +86,13 @@ export const useSpeedTestStore = create<SpeedTestStore>((set, get) => ({
       set({ state: 'complete' });
     } catch (e) {
       console.error("Upload test failed:", e);
-      // We don't set global error here to keep download result visible
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        set({ state: 'offline' });
+      } else {
+        // We don't set global error here to keep download result visible
+        // But we should probably revert state to complete or something
+        set({ state: 'complete' });
+      }
     }
   },
   

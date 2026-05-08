@@ -4,13 +4,34 @@ import { useEffect, useRef } from "react";
 import { ConnectionState } from "@/store/useSpeedTestStore";
 import { useSettingsStore } from "@/store/useSettingsStore";
 
+export type NetworkQuality = 'offline' | 'weak' | 'stable' | 'live' | 'good' | 'super' | 'idle';
+
 interface AuraCanvasProps {
   connectionState?: ConnectionState;
+  quality?: NetworkQuality;
 }
 
-export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps) {
+export default function AuraCanvas({ connectionState = 'idle', quality = 'idle' }: AuraCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { reducedMotion } = useSettingsStore();
+
+  const currentColors = useRef({ 
+    start: { r: 138, g: 43, b: 226 }, // #8a2be2
+    mid:   { r: 65, g: 105, b: 225 }, // #4169E1
+    end:   { r: 0, g: 240, b: 255 },  // #00f0ff
+    shadow: { r: 0, g: 240, b: 255 }
+  });
+
+  const hexToRgb = (hex: string) => {
+    const h = parseInt(hex.replace('#', ''), 16);
+    return { r: h >> 16, g: h >> 8 & 0xff, b: h & 0xff };
+  };
+
+  const rgbToHex = (rgb: { r: number, g: number, b: number }) => {
+    return '#' + ((1 << 24) + (Math.round(rgb.r) << 16) + (Math.round(rgb.g) << 8) + Math.round(rgb.b)).toString(16).slice(1);
+  };
+
+  const lerp = (a: number, b: number, amount: number) => a + (b - a) * amount;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -42,11 +63,59 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
         speedMultiplier = 0.5;
       } else if (connectionState === 'testing_ping') {
         speedMultiplier = 2;
+      } else if (connectionState === 'offline') {
+        speedMultiplier = 0.2;
       }
 
       if (reducedMotion) {
         speedMultiplier *= 0.1;
       }
+
+      // Color Schemes based on Network Quality
+      const colorSchemes = {
+        offline: { start: "#ff4b2b", mid: "#ff416c", end: "#800000", shadow: "#ff4b2b" },
+        weak:    { start: "#f83600", mid: "#f9d423", end: "#ff8c00", shadow: "#f83600" },
+        stable:  { start: "#00d2ff", mid: "#3a7bd5", end: "#00f0ff", shadow: "#00d2ff" },
+        live:    { start: "#8a2be2", mid: "#4169E1", end: "#00f0ff", shadow: "#00f0ff" },
+        good:    { start: "#00b09b", mid: "#96c93d", end: "#00ffaa", shadow: "#00ffaa" },
+        super:   { start: "#ffd700", mid: "#ffffff", end: "#ff8c00", shadow: "#ffd700" },
+        idle:    { start: "#8a2be2", mid: "#4169E1", end: "#00f0ff", shadow: "#00f0ff" }
+      };
+
+      const targetHex = colorSchemes[quality] || colorSchemes.idle;
+      const target = {
+        start: hexToRgb(targetHex.start),
+        mid: hexToRgb(targetHex.mid),
+        end: hexToRgb(targetHex.end),
+        shadow: hexToRgb(targetHex.shadow)
+      };
+
+      const lerpSpeed = 0.03; // Even slower for maximum smoothness
+
+      // Defensive check for hot-reload state mismatch (if useRef still holds strings from previous version)
+      if (typeof currentColors.current.start === 'string') {
+        currentColors.current = {
+          start: hexToRgb("#8a2be2"),
+          mid:   hexToRgb("#4169E1"),
+          end:   hexToRgb("#00f0ff"),
+          shadow: hexToRgb("#00f0ff")
+        };
+      }
+
+      // Interpolate current RGB values toward target RGB values
+      ['start', 'mid', 'end', 'shadow'].forEach((key) => {
+        const k = key as keyof typeof currentColors.current;
+        currentColors.current[k].r = lerp(currentColors.current[k].r, target[k].r, lerpSpeed);
+        currentColors.current[k].g = lerp(currentColors.current[k].g, target[k].g, lerpSpeed);
+        currentColors.current[k].b = lerp(currentColors.current[k].b, target[k].b, lerpSpeed);
+      });
+
+      const activeColors = {
+        start: rgbToHex(currentColors.current.start),
+        mid: rgbToHex(currentColors.current.mid),
+        end: rgbToHex(currentColors.current.end),
+        shadow: rgbToHex(currentColors.current.shadow)
+      };
 
       // Reset all drawing state to prevent shadow bleeding from previous frames
       ctx.globalAlpha = 1;
@@ -65,14 +134,14 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
       // Make it massive enough to wrap the triangular layout
       const baseRadius = minDimension * (isMobile ? 0.35 : 0.40) + (speedMultiplier > 1 && !reducedMotion ? 15 : 0);
 
-      // Safe gradient creation (Purple to Cyan)
+      // Safe gradient creation using the interpolated colors
       const gradient = ctx.createLinearGradient(
         centerX - baseRadius, centerY - baseRadius,
         centerX + baseRadius, centerY + baseRadius
       );
-      gradient.addColorStop(0, "#8a2be2"); // Deep Violet
-      gradient.addColorStop(0.5, "#4169E1"); // Royal Blue
-      gradient.addColorStop(1, "#00f0ff"); // Cyan
+      gradient.addColorStop(0, activeColors.start);
+      gradient.addColorStop(0.5, activeColors.mid);
+      gradient.addColorStop(1, activeColors.end);
 
       // Multi-layer glowing membrane (Thick & nebulous)
       const layers = [
@@ -117,7 +186,7 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
         ctx.strokeStyle = gradient;
         ctx.lineWidth = layerConfig.width;
         ctx.shadowBlur = layerConfig.blur;
-        ctx.shadowColor = "#00f0ff";
+        ctx.shadowColor = activeColors.shadow;
         ctx.globalAlpha = layerConfig.alpha;
         ctx.stroke();
       });
@@ -129,7 +198,7 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
       // 3. Global Signal Dust (Floating colored particles all over)
       if (!reducedMotion) {
         const particleCount = 200;
-        const colors = ["#8a2be2", "#4169E1", "#00f0ff", "#ffffff"];
+        const colors = [activeColors.start, activeColors.mid, activeColors.end, "#ffffff"];
         
         for(let p = 0; p < particleCount; p++) {
           const seedX = (p * 7919) % 10000 / 10000;
@@ -162,7 +231,7 @@ export default function AuraCanvas({ connectionState = 'idle' }: AuraCanvasProps
       if (!reducedMotion) {
         ctx.fillStyle = "#ffffff";
         ctx.shadowBlur = 6;
-        ctx.shadowColor = "#00f0ff";
+        ctx.shadowColor = activeColors.shadow;
         
         for(let p = 0; p < 60; p++) {
           const angle = (p * 137.5) * (Math.PI / 180);

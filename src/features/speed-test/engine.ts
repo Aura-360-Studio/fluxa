@@ -88,7 +88,9 @@ class DurationBasedEngine {
       }
 
     } catch (e: any) {
-      if (e.name !== 'AbortError') console.error("Download test failed", e);
+      if (e.name === 'AbortError') return 0;
+      console.error("Download test failed", e);
+      throw e; // Re-throw to allow store to handle state change
     }
     
     onProgress('download', 1, finalSpeed);
@@ -128,7 +130,7 @@ class DurationBasedEngine {
       } catch (e: any) {
         if (e.name === 'AbortError') break;
         console.error("Upload chunk failed", e);
-        break;
+        throw e; // Re-throw critical failures
       }
     }
 
