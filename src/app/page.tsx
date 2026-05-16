@@ -462,40 +462,11 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* Screen Footer & SEO Content */}
-      <div className="relative z-20 w-full max-w-4xl mx-auto px-6 pb-12 mt-8 flex flex-col items-center">
-        {/* Subtle SEO Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[10px] md:text-[11px] text-white/10 font-light leading-relaxed text-center md:text-left mb-12">
-          <div className="flex flex-col gap-2">
-            <h4 className="text-white/20 font-bold uppercase tracking-widest">Atmospheric Precision</h4>
-            <p>Fluxa is a next-generation <strong>internet speed test</strong> designed for clarity and focus. Unlike traditional tools, we visualize your network as a flowing energy field, providing a cinematic experience while measuring your <strong>download speed</strong>, <strong>upload speed</strong>, and <strong>ping latency</strong> with professional-grade accuracy.</p>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h4 className="text-white/20 font-bold uppercase tracking-widest">Ad-Free Experience</h4>
-            <p>We believe a <strong>speed test</strong> should be as fast as your connection. Fluxa is completely <strong>ad-free</strong> and tracking-free, ensuring that 100% of your bandwidth is used for the test itself. Check your <strong>wifi health</strong> and <strong>network stability</strong> instantly without intrusive popups or clutter.</p>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h4 className="text-white/20 font-bold uppercase tracking-widest">Universal Connectivity</h4>
-            <p>Whether you are on fiber, 5G, or satellite, Fluxa's globally distributed nodes provide the most accurate <strong>bandwidth monitoring</strong>. Perfect for designers, gamers, and remote workers who need a <strong>clean speed test</strong> that matches their aesthetic workflow.</p>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row items-center justify-between w-full border-t border-white/5 pt-8 gap-4">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2 text-[10px] text-white/20 font-medium tracking-[0.2em] uppercase">
-              <Zap size={12} className="text-[#00f0ff]" />
-              <span>Engine v2.4</span>
-            </div>
-            <div className="flex items-center gap-2 text-[10px] text-white/20 font-medium tracking-[0.2em] uppercase">
-              <Activity size={12} className="text-[#8a2be2]" />
-              <span>Ad-Free</span>
-            </div>
-          </div>
-          
-          <div className="text-white/10 text-[9px] md:text-[10px] font-medium tracking-[0.2em] uppercase flex flex-col md:flex-row items-center gap-1 md:gap-1.5 text-center md:text-right">
-            <span>POWERED BY</span>
-            <a href="https://aura360studio.com/showcase" target="_blank" rel="noopener noreferrer" className="text-white/20 hover:text-[#00f0ff] transition-colors duration-300">AURA360STUDIO</a>
-          </div>
+      {/* Screen Footer */}
+      <div className="fixed bottom-6 md:bottom-8 left-0 right-0 px-6 md:px-10 flex items-center justify-center md:justify-end z-20 pointer-events-none">
+        <div className="text-white/10 text-[9px] md:text-[10px] font-medium tracking-[0.2em] pointer-events-auto uppercase flex flex-col md:flex-row items-center gap-1 md:gap-1.5 text-center md:text-right">
+          <span>POWERED BY</span>
+          <a href="https://aura360studio.com/showcase" target="_blank" rel="noopener noreferrer" className="text-white/20 hover:text-[#00f0ff] transition-colors duration-300">AURA360STUDIO</a>
         </div>
       </div>
     </main>

@@ -33,12 +33,7 @@ export const metadata: Metadata = {
     "ping test", 
     "no ads speed test",
     "clean speed test",
-    "fastest speed test",
-    "best internet speed test 2026",
-    "speed test for designers",
-    "cinematic network visualizer",
-    "accurate bandwidth test",
-    "5g speed test ad-free"
+    "fastest speed test"
   ],
   creator: "Fluxa",
   publisher: "Fluxa",
