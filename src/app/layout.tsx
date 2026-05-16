@@ -148,7 +148,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-cosmic-black text-white font-sans overflow-hidden" suppressHydrationWarning>
+      <body className="min-h-screen bg-cosmic-black text-white font-sans overflow-x-hidden overflow-y-auto" suppressHydrationWarning>
         {children}
       </body>
     </html>

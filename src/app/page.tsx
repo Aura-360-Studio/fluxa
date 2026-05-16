@@ -247,7 +247,7 @@ export default function Home() {
       </header>
 
       {/* 4. Metrics Layer - obsidian glass Card */}
-      <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full px-6 md:px-10 py-12 md:py-20">
+      <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full px-6 md:px-10 py-16 md:py-24">
         <motion.div 
           layout
           initial={{ opacity: 0, y: 20 }}
