@@ -54,6 +54,7 @@ class DurationBasedEngine {
     const start = performance.now();
     let receivedBytes = 0;
     let finalSpeed = 0;
+    let lastUpdate = 0;
 
     try {
       const response = await fetch(this.DL_TEST_URL, {
@@ -84,7 +85,11 @@ class DurationBasedEngine {
         const speedMbps = (receivedBytes * 8) / durationInSecs / (1024 * 1024);
         finalSpeed = speedMbps;
         
-        onProgress('download', elapsed / this.TEST_DURATION_MS, speedMbps);
+        // Throttle updates to UI (every 50ms) to avoid "glitchy" number feeling
+        if (now - lastUpdate > 50) {
+          onProgress('download', elapsed / this.TEST_DURATION_MS, speedMbps);
+          lastUpdate = now;
+        }
       }
 
     } catch (e: any) {
@@ -106,10 +111,12 @@ class DurationBasedEngine {
     const start = performance.now();
     let uploadedBytes = 0;
     let finalSpeed = 0;
+    let lastUpdate = 0;
 
     // Loop uploading chunks until time runs out
     while (true) {
-      const elapsed = performance.now() - start;
+      const now = performance.now();
+      const elapsed = now - start;
       if (elapsed >= this.TEST_DURATION_MS || this.abortController.signal.aborted) {
         break;
       }
@@ -126,7 +133,11 @@ class DurationBasedEngine {
         const durationInSecs = (performance.now() - start) / 1000;
         finalSpeed = (uploadedBytes * 8) / Math.max(durationInSecs, 0.1) / (1024 * 1024);
         
-        onProgress('upload', Math.min((performance.now() - start) / this.TEST_DURATION_MS, 1), finalSpeed);
+        // Throttle updates to UI (every 50ms)
+        if (now - lastUpdate > 50) {
+          onProgress('upload', Math.min(elapsed / this.TEST_DURATION_MS, 1), finalSpeed);
+          lastUpdate = now;
+        }
       } catch (e: any) {
         if (e.name === 'AbortError') break;
         console.error("Upload chunk failed", e);

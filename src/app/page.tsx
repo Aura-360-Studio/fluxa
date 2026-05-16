@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, MapPin, Activity, X, Zap, ZapOff, RefreshCcw, Beaker, Download } from "lucide-react";
 import AuraCanvas from "@/canvas/AuraCanvas";
+import AnalogDisplay from "@/ui/AnalogDisplay";
 import { useSpeedTestStore } from "@/store/useSpeedTestStore";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import { NetworkQuality } from "@/canvas/AuraCanvas";
@@ -12,7 +13,7 @@ import { interpretConnection, getOfflineMessage } from "@/features/speed-test/in
 
 export default function Home() {
   const { state, metrics, showDetails, startTest, startUploadTest } = useSpeedTestStore();
-  const { reducedMotion, toggleReducedMotion } = useSettingsStore();
+  const { reducedMotion, toggleReducedMotion, viewMode, setViewMode } = useSettingsStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [nodeName, setNodeName] = useState("South India Node");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -143,7 +144,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen flex flex-col font-sans overflow-hidden bg-[#02030A]">
+    <main className="relative min-h-screen flex flex-col font-sans overflow-x-hidden overflow-y-auto bg-[#02030A]">
       {/* 1. Atmosphere Layer - CSS Radial Gradient */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.03)_0%,transparent_70%)] pointer-events-none"></div>
 
@@ -246,7 +247,7 @@ export default function Home() {
       </header>
 
       {/* 4. Metrics Layer - obsidian glass Card */}
-      <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full px-6">
+      <div className="flex-1 flex flex-col items-center justify-center relative z-10 w-full px-6 md:px-10 py-12 md:py-20">
         <motion.div 
           layout
           initial={{ opacity: 0, y: 20 }}
@@ -255,50 +256,93 @@ export default function Home() {
             layout: { type: "spring", stiffness: 100, damping: 30, mass: 1 },
             opacity: { duration: 0.6 }
           }}
-          className="relative w-full max-w-[500px] bg-[#050505]/60 border border-white/10 backdrop-blur-xl rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl overflow-hidden"
+          className="relative w-full max-w-[480px] bg-[#050505]/60 border border-white/10 backdrop-blur-xl rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-8 shadow-2xl overflow-hidden mx-auto my-auto"
         >
           <div className="relative z-10 flex flex-col items-center">
             {/* Top Section */}
-             <motion.div layout className="flex flex-col items-center text-center max-w-md mb-8">
-              <div 
-                className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] mb-6 pt-2 transition-colors duration-500 uppercase"
-                style={{ color: qualityData[quality].color }}
-              >
-                <span 
-                  className="w-1.5 h-1.5 rounded-full transition-colors duration-500"
-                  style={{ backgroundColor: qualityData[quality].color }}
-                ></span>
-                {qualityData[quality].label}
+             <motion.div layout className="flex flex-col items-center text-center max-w-md mb-6">
+              <div className="flex items-center gap-6 mb-6 pt-2">
+                <div 
+                  className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] transition-colors duration-500 uppercase"
+                  style={{ color: qualityData[quality].color }}
+                >
+                  <span 
+                    className="w-1.5 h-1.5 rounded-full transition-colors duration-500"
+                    style={{ backgroundColor: qualityData[quality].color }}
+                  ></span>
+                  {qualityData[quality].label}
+                </div>
+
+                {/* View Mode Toggle */}
+                <div className="flex items-center bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-md">
+                  <button 
+                    onClick={() => setViewMode('digital')}
+                    className={`px-3 py-1 rounded-full text-[9px] font-bold tracking-wider transition-all ${viewMode === 'digital' ? 'bg-[#00f0ff] text-black shadow-[0_0_10px_rgba(0,240,255,0.4)]' : 'text-white/40 hover:text-white/60'}`}
+                  >
+                    Digital
+                  </button>
+                  <button 
+                    onClick={() => setViewMode('analog')}
+                    className={`px-3 py-1 rounded-full text-[9px] font-bold tracking-wider transition-all ${viewMode === 'analog' ? 'bg-[#00f0ff] text-black shadow-[0_0_10px_rgba(0,240,255,0.4)]' : 'text-white/40 hover:text-white/60'}`}
+                  >
+                    Analog
+                  </button>
+                </div>
               </div>
 
-              <h1 className="text-3xl md:text-5xl font-light tracking-tight mb-3 md:mb-4 text-white">
+              <h1 className="text-2xl md:text-4xl font-light tracking-tight mb-2 md:mb-3 text-white">
                 {getStateMessage()}
               </h1>
               
-                <p className="text-[12px] md:text-sm text-white/40 font-light leading-relaxed mb-6 md:mb-10 max-w-[260px] md:max-w-[320px]">
+                <p className="text-[11px] md:text-[13px] text-white/40 font-light leading-relaxed mb-4 md:mb-6 max-w-[240px] md:max-w-[300px]">
                 {interpretation}
               </p>
 
-              <div className="flex flex-col items-center">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-white/20 font-bold mb-4">
-                  DOWNSTREAM
-                </span>
-                <div className="flex items-baseline gap-2 md:gap-3">
-                  <span className="text-6xl md:text-8xl font-extralight text-white tabular-nums tracking-tighter">
-                    {metrics.download > 0 ? metrics.download : '--'}
-                  </span>
-                  <span 
-                    className="text-lg md:text-2xl font-light transition-colors duration-500"
-                    style={{ color: qualityData[quality].color }}
+              <AnimatePresence mode="wait">
+                {viewMode === 'digital' ? (
+                  <motion.div 
+                    key="digital-view"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex flex-col items-center"
                   >
-                    Mbps
-                  </span>
-                </div>
-                <div 
-                  className="w-16 h-[2px] rounded-full mt-5 opacity-30 transition-colors duration-500"
-                  style={{ background: `linear-gradient(90deg, transparent, ${qualityData[quality].color}, transparent)` }}
-                ></div>
-              </div>
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-white/20 font-bold mb-4">
+                      DOWNSTREAM
+                    </span>
+                    <div className="flex items-baseline gap-2 md:gap-3">
+                      <span className="text-5xl md:text-7xl font-extralight text-white tabular-nums tracking-tighter">
+                        {metrics.download > 0 ? metrics.download : '--'}
+                      </span>
+                      <span 
+                        className="text-base md:text-xl font-light transition-colors duration-500"
+                        style={{ color: qualityData[quality].color }}
+                      >
+                        Mbps
+                      </span>
+                    </div>
+                    <div 
+                      className="w-16 h-[2px] rounded-full mt-5 opacity-30 transition-colors duration-500"
+                      style={{ background: `linear-gradient(90deg, transparent, ${qualityData[quality].color}, transparent)` }}
+                    ></div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="analog-view"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                    className="w-full"
+                  >
+                    <AnalogDisplay 
+                      showDetails={showDetails} 
+                      qualityColor={qualityData[quality].color} 
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
 
             {/* Middle Section: "Show more info" and "Test Again" Buttons */}
@@ -311,7 +355,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.4 }}
-                  className="flex flex-col md:flex-row items-center gap-3 md:gap-4 mb-8 w-full"
+                  className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 mb-4 w-full"
                 >
                   {!showDetails && state !== 'offline' && (
                     <motion.button 
@@ -357,7 +401,7 @@ export default function Home() {
 
             {/* Bottom Section: Progressive disclosure for Upstream & Latency */}
             <AnimatePresence>
-              {showDetails && (
+              {showDetails && viewMode === 'digital' && (
                 <motion.div 
                   layout
                   initial={{ opacity: 0, height: 0 }}
@@ -367,7 +411,7 @@ export default function Home() {
                     height: { type: "spring", stiffness: 100, damping: 30 },
                     opacity: { duration: 0.5, delay: 0.2 }
                   }}
-                  className="relative flex items-center justify-between w-full max-w-sm mb-6 md:mb-10 overflow-hidden"
+                  className="relative flex items-center justify-between w-full max-w-sm mb-3 md:mb-6 overflow-hidden"
                 >
                   {/* Upstream */}
                   <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center flex-1">
